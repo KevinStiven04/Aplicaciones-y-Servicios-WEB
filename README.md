@@ -150,7 +150,7 @@ Inclúyala en el informe:
 
 **¿Qué recurso solicitó el navegador?**
 
-> Escriba aquí su respuesta.
+> El navegador solicitud el recurso de imagen png para una mejor visualizacion 
 
 **¿Qué información permite determinar si la solicitud fue atendida
 correctamente?**
@@ -180,13 +180,13 @@ Utilizando **Elementos / Elements**:
 
 ## Resultados
 
-**Elemento seleccionado:** `____________________________`
+**Elemento seleccionado:** `boton`
 
-**Etiqueta HTML:** `____________________________`
+**Etiqueta HTML:** `a`
 
-**Contenido original:** `____________________________`
+**Contenido original:** `Descargar`
 
-**Modificación realizada:** `____________________________`
+**Modificación realizada:** `BTN`
 
 El proceso observado puede representarse conceptualmente así:
 
@@ -217,7 +217,8 @@ Inclúyala aquí:
 **¿La modificación realizada sobre el DOM alteró permanentemente la
 aplicación o los archivos almacenados en el servidor? Justifique.**
 
-> Escriba aquí su respuesta.
+> Ese cambio no modifica el archivo permanetemente el archivo ya que no estamos modificando el archivo original almacenado
+solamente es una vision local en el momento.
 
 ------------------------------------------------------------------------
 
@@ -240,12 +241,13 @@ Observe si aparece una nueva solicitud en Network.
 
   Elemento                       Resultado
   ------------------------------ -----------
-  Acción realizada               
-  ¿Generó una nueva solicitud?   
-  URL solicitada                 
-  Método HTTP                    
-  Código de estado               
-  Tipo de respuesta              
+  Acción realizada                  Presional boton            
+  ¿Generó una nueva solicitud?      Si, genero unas solicitudes en JS
+  URL solicitada                    https://analytics.google.com/g/collect?v=2&tid=G-B94JQ2LRPV&gtm=45je68i1v882900881za200zb9177264783zd9177264783&_p=1787185481915&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAGQ&ae=a&are=1&cid=1687651646.1782827761&frm=0&lps=1&pscdl=noapi&rcb=8&sr=1536x864&uaa=x86&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CGoogle%2520Chrome%3B151.0.7922.138%7CChromium%3B151.0.7922.138&uam=&uamb=0&uap=Windows&uapv=19.0.0&uaw=0&ul=es-es&gaf=2&_s=2&tag_exp=115616986~115938466~115938469~118897920~118897930~119367802~119367810~120315471~120385422&sid=1787181806&sct=19&seg=1&dl=https%3A%2F%2Fwww.itm.edu.co%2Fformatos-institucionales%2F&dr=https%3A%2F%2Fwww.google.com%2F&dt=Formatos%20Institucionales%20%E2%80%93%20ITM&en=file_download&ep.link_id=&ep.link_url=https%3A%2F%2Fwww.itm.edu.co%2Fwp-content%2Fuploads%2Fformatos%2Flogos2026.zip&ep.link_text=Descargar&ep.file_name=%2Fwp-content%2Fuploads%2Fformatos%2Flogos2026.zip&ep.file_extension=zip&_et=170&tfd=20651
+
+  Método HTTP                       POST                
+  Código de estado                  204
+  Tipo de respuesta                 Descarga
 
 ## Ciclo de interacción
 
@@ -281,7 +283,7 @@ Inclúyala aquí:
 **Explique la relación entre la acción realizada por el usuario y la
 solicitud observada.**
 
-> Escriba aquí su respuesta.
+> Cada accion por mas pequeña que sea genera una solicitud
 
 ------------------------------------------------------------------------
 
@@ -302,7 +304,14 @@ Reemplace el siguiente bloque con su diagrama:
 
 ``` mermaid
 flowchart LR
-    A[Construya aquí] --> B[su flujo observado]
+    A[Usuario realiza una acción] --> B[Navegador]
+    B --> C[JavaScript procesa la acción]
+    C --> D[Solicitud HTTP]
+    D --> E[Servidor]
+    E --> F[Respuesta HTTP]
+    F --> C
+    C --> G[Actualización del DOM]
+    G --> H[Interfaz muestra el resultado]
 ```
 
 ------------------------------------------------------------------------
@@ -316,16 +325,15 @@ Clasifique sus hallazgos:
 
 ## Elementos observados directamente
 
--   
--   
--   
+-Se observó en Network que al realizar la acción sobre el botón “Descargar” el navegador generó una solicitud HTTP POST hacia analytics.google.com/g/collect.
+-Se observaron directamente los datos de la solicitud, incluyendo el método HTTP POST, el código de estado 204 y los parámetros asociados al evento file_download, donde se identifica el enlace de descarga.
+-Se observó en Elements que el botón correspondía a una etiqueta HTML <a> y que al modificar su contenido de Descargar a BTN el cambio se reflejó inmediatamente en la interfaz.
 
 ## Elementos inferidos
 
--   
--   
--   
-
+-Se infiere que JavaScript interviene en el procesamiento de la interacción, debido a que la acción sobre el enlace produjo una solicitud adicional de seguimiento registrada en Network.
+-Se infiere que el servidor de Google Analytics recibe y procesa la información asociada al evento de descarga, aunque el procesamiento interno no puede observarse directamente desde las herramientas del navegador.
+-Se infiere que la aplicación utiliza mecanismos del lado del cliente para gestionar o registrar determinadas interacciones del usuario, pero la lógica interna exacta de estos mecanismos no puede determinarse únicamente mediante Network y Elements.
 > No presente como observado un proceso interno que las herramientas del
 > navegador no permitan comprobar directamente.
 
@@ -335,9 +343,9 @@ Clasifique sus hallazgos:
 
 Redacte **tres conclusiones técnicas** derivadas de la práctica.
 
-1.  
-2.  
-3.  
+1. La aplicación web está compuesta por múltiples recursos y solicitudes HTTP, ya que durante la carga de la página del ITM se observaron 124 solicitudes correspondientes a archivos CSS, JavaScript, imágenes, fuentes y otros recursos necesarios para construir la interfaz.
+2. La interacción del usuario puede generar solicitudes adicionales, como se comprobó al presionar el botón “Descargar”, acción que produjo una solicitud POST hacia Google Analytics con el evento file_download y código de estado 204. Esto evidencia que algunas interacciones son registradas mediante mecanismos ejecutados desde el navegador.
+3. Las herramientas de desarrollo permiten observar el comportamiento del lado del cliente, pero no todos los procesos internos del servidor. La inspección del DOM permitió modificar temporalmente un elemento de la interfaz, mientras que Network permitió analizar las solicitudes y respuestas HTTP; sin embargo, la lógica interna del servidor y el procesamiento de los datos solo pueden inferirse a partir de estas evidencias.
 
 Las conclusiones deben explicar lo aprendido a partir de la evidencia y
 no limitarse a describir las actividades realizadas.
