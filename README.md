@@ -274,9 +274,8 @@ evidencias/interaccion.png
 
 Inclúyala aquí:
 
-``` markdown
+```markdown
 ![Interacción observada en Network](evidencias/interaccion.png)
-```
 
 ### Análisis
 
